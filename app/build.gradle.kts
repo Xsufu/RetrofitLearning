@@ -57,4 +57,7 @@ dependencies {
     //OkHttpClient
     implementation("com.squareup.okhttp3:logging-interceptor:4.7.2")
     implementation("com.squareup.okhttp3:okhttp:4.7.2")
+
+    // Picasso
+    implementation("com.squareup.picasso:picasso:2.8")
 }
