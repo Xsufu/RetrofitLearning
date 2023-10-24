@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.retrofitlearning.databinding.ActivityMainBinding
+import com.example.retrofitlearning.retrofit.MainAPI
+import com.example.retrofitlearning.retrofit.OutputData
 import com.example.retrofitlearning.retrofit.ProductAPI
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,15 +42,28 @@ class MainActivity : AppCompatActivity() {
 
         // Указываем интерфейс для работы
         val productAPI = retrofit.create(ProductAPI::class.java)
+        val userAPI = retrofit.create(MainAPI::class.java)
 
         binding.sendRequest.setOnClickListener {
             // Выносим в отдельный поток
             CoroutineScope(Dispatchers.IO).launch {
                 // Делаем запрос
-                val product = productAPI.getProductById(3)
+                //val product = productAPI.getProductById(3)
+                val user = userAPI.auth(
+                    OutputData(
+                        binding.username.text.toString(),
+                        binding.password.text.toString()
+                    )
+                )
+
                 // Запускаем на основном потоке
                 runOnUiThread {
-                    binding.productBrand.text = product.title
+                    //binding.surname.text = product.title
+                    binding.apply {
+                        Picasso.get().load(user.image).into(avatarIV)
+                        firstNameHolder.text = user.firstName
+                        surenameHolder.text = user.lastName
+                    }
                 }
             }
         }
