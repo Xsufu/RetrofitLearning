@@ -1,16 +1,17 @@
 package com.example.retrofitlearning
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.example.retrofitlearning.databinding.ActivityMainBinding
 import com.example.retrofitlearning.retrofit.ProductAPI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,10 +23,18 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Создаём перехватчик и указываем его уровень
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        // Создаём клиент с нашим перехватчиком
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+
         // Создаём билдер
         val retrofit = Retrofit.Builder()
             .baseUrl("https://dummyjson.com")
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build()
 
         // Указываем интерфейс для работы
