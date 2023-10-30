@@ -3,11 +3,11 @@ package com.example.retrofitlearning
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.retrofitlearning.adapter.ProductAdapter
 import com.example.retrofitlearning.databinding.ActivityMainBinding
 import com.example.retrofitlearning.retrofit.MainAPI
-import com.example.retrofitlearning.retrofit.OutputData
 import com.example.retrofitlearning.retrofit.ProductAPI
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,12 +19,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: ProductAdapter
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        adapter = ProductAdapter()
+        binding.rcView.layoutManager = LinearLayoutManager(this)
+        binding.rcView.adapter = adapter
 
         // Создаём перехватчик и указываем его уровень
         val interceptor = HttpLoggingInterceptor()
@@ -44,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         val productAPI = retrofit.create(ProductAPI::class.java)
         val userAPI = retrofit.create(MainAPI::class.java)
 
-        binding.sendRequest.setOnClickListener {
+        /*binding.sendRequest.setOnClickListener {
             // Выносим в отдельный поток
             CoroutineScope(Dispatchers.IO).launch {
                 // Делаем запрос
@@ -65,6 +70,14 @@ class MainActivity : AppCompatActivity() {
                         surenameHolder.text = user.lastName
                     }
                 }
+            }
+        }*/
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val list = userAPI.getAllProducts()
+
+            runOnUiThread {
+                adapter.submitList(list.products)
             }
         }
     }
