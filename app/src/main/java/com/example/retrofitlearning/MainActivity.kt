@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.retrofitlearning.adapter.ProductAdapter
 import com.example.retrofitlearning.databinding.ActivityMainBinding
 import com.example.retrofitlearning.retrofit.MainAPI
+import com.example.retrofitlearning.retrofit.OutputData
 import com.example.retrofitlearning.retrofit.ProductAPI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +84,14 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(query: String?): Boolean {
                 CoroutineScope(Dispatchers.IO).launch {
                     // val list = userAPI.getAllProducts()
-                    val list = query?.let { userAPI.getProductBySearch(it) }
+                    val user = userAPI.auth(
+                        OutputData(
+                            "atuny0",
+                            "9uQFF1Lh"
+                        )
+                    )
+
+                    val list = query?.let { userAPI.getProductBySearch(user.token, it) }
                     runOnUiThread {
                         adapter.submitList(list?.products)
                     }
