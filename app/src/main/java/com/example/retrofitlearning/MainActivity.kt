@@ -2,17 +2,12 @@ package com.example.retrofitlearning
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.retrofitlearning.adapter.ProductAdapter
 import com.example.retrofitlearning.databinding.ActivityMainBinding
 import com.example.retrofitlearning.retrofit.MainAPI
-import com.example.retrofitlearning.retrofit.OutputData
 import com.example.retrofitlearning.retrofit.ProductAPI
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -76,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         }*/
 
         // Слушатель для поиска
-        binding.sv.setOnQueryTextListener(object : OnQueryTextListener {
+        /*binding.sv.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
             }
@@ -99,6 +94,6 @@ class MainActivity : AppCompatActivity() {
 
                 return true
             }
-        })
+        })*/
     }
 }
