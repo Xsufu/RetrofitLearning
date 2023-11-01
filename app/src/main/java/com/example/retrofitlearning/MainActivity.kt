@@ -2,6 +2,7 @@ package com.example.retrofitlearning
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.retrofitlearning.adapter.ProductAdapter
@@ -73,12 +74,23 @@ class MainActivity : AppCompatActivity() {
             }
         }*/
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val list = userAPI.getAllProducts()
-
-            runOnUiThread {
-                adapter.submitList(list.products)
+        // Слушатель для поиска
+        binding.sv.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
             }
-        }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                CoroutineScope(Dispatchers.IO).launch {
+                    // val list = userAPI.getAllProducts()
+                    val list = query?.let { userAPI.getProductBySearch(it) }
+                    runOnUiThread {
+                        adapter.submitList(list?.products)
+                    }
+                }
+
+                return true
+            }
+        })
     }
 }
